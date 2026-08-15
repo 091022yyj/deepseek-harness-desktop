@@ -2,7 +2,7 @@
 
 [中文](README.zh.md) | [English](README.md)
 
-DeepSeek Harness 桌面端（`dsh-desktop`）是一个 Linux 桌面应用：它将完整的 DeepSeek Harness（`dsh`）智能体框架及其 Web 界面打包安装，启动后自动在本地拉起服务，并以独立的应用窗口打开，获得接近原生桌面程序的体验。
+DeepSeek Harness 桌面端（`dsh-desktop`）是一个跨平台桌面应用（Windows / macOS / Linux）：它将完整的 DeepSeek Harness（`dsh`）智能体框架及其 Web 界面打包安装，启动后自动在本地拉起服务，并以独立的应用窗口打开，获得接近原生桌面程序的体验。
 
 DeepSeek Harness 是一个开源的 agent harness（智能体框架），采用**一切皆插件**的架构：你可以在 Web 界面中配置模型、创建工作区，让智能体读写项目文件、执行命令、委派子任务并维护计划。
 

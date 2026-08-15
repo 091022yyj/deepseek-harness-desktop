@@ -2,7 +2,7 @@
 
 [中文](README.zh.md) | English
 
-DeepSeek Harness Desktop (`dsh-desktop`) is a Linux desktop app that packages the full DeepSeek Harness (`dsh`) agent framework and its web UI. On launch it starts a local service and opens it in a standalone app window for a near-native desktop experience.
+DeepSeek Harness Desktop (`dsh-desktop`) is a cross-platform desktop app for Windows, macOS, and Linux that packages the full DeepSeek Harness (`dsh`) agent framework and its web UI. On launch it starts a local service and opens it in a standalone app window for a near-native desktop experience.
 
 DeepSeek Harness is an open-source agent harness with an **everything-is-a-plugin** architecture: configure a model and a workspace in the web UI, and let the agent read and edit project files, run commands, delegate subtasks, and maintain a plan.
 
