@@ -1,54 +1,65 @@
-# DeepSeek Harness
+# DeepSeek Harness Desktop
 
-English | [中文](README.zh.md)
+[中文](README.zh.md) | English
 
-DeepSeek Harness (`dsh`) is an open-source agent harness developed by [DeepSeek AI](https://deepseek.com).
+DeepSeek Harness Desktop (`dsh-desktop`) packages the DeepSeek Harness web UI as a Linux desktop app: it starts a local service and opens it in a standalone app window, giving a near-native desktop experience.
 
-It uses an architecture where **everything is a plugin**, and is powered by [Cordis](https://github.com/cordiverse/cordis), whose design is described in [_A Programming Paradigm for Spatiotemporal Composability_](https://github.com/cordiverse/paper).
+## Features
 
-## Developer preview
+- **One-click launch**: automatically starts the local service (default `http://127.0.0.1:3080`) and opens a Chromium/Chrome app window
+- **Standalone window**: runs in `--app` mode with no tabs or address bar
+- **Isolated profile**: uses a dedicated Chromium profile directory, separate from your daily browser
+- **Works out of the box**: launch from the system app menu or the terminal after installation
+- **Configurable**: customize port, browser, and external service address via environment variables
 
-DeepSeek Harness is currently in _developer preview_ and is iterating rapidly. **THERE WILL BE COMPATIBILITY-BREAKING CHANGES.**
+## Requirements
 
-## Run
+- Debian / Ubuntu or other dpkg-based Linux distributions (amd64)
+- Node.js >= 22
+- Google Chrome / Chromium or another Chromium-based browser (optional; falls back to `xdg-open`)
 
-### Run from `npm`
+## Installation
 
-Install `Node.js`, then run:
+Download the latest `deepseek-harness_*.deb` package from the [Releases](../../releases/latest) page, then run:
 
 ```sh
-npx @deepseek-ai/dsh web
+sudo dpkg -i deepseek-harness_0.1.0~rc.5_amd64.deb
 ```
 
-The command starts the Web UI, served at `http://127.0.0.1:3080` by default. See [Web UI guide](docs/user/guide/index.md).
+After installation:
 
-### Run from source
+- **App menu**: find and click "DeepSeek Harness Desktop" in your system app menu
+- **Terminal**: run `dsh-desktop`
 
-To run from a repository checkout:
+## Usage
+
+On launch, the desktop app starts a local service and opens the app window. The service defaults to `http://127.0.0.1:3080`; you can also open that address directly in a browser to use the web UI.
+
+Supported environment variables:
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `DSH_DESKTOP_PORT` | `3080` | Local service port |
+| `DSH_DESKTOP_URL` | `http://127.0.0.1:3080` | Connect to an existing service instead of starting one locally |
+| `DSH_DESKTOP_BROWSER` | auto-detected | Browser to use, e.g. `google-chrome`, `chromium` |
+
+Log files:
+
+- Service log: `$XDG_RUNTIME_DIR/dsh-desktop.log` (falls back to `/tmp/dsh-desktop.log`)
+- Browser log: `$XDG_RUNTIME_DIR/dsh-desktop-browser.log` (falls back to `/tmp/dsh-desktop-browser.log`)
+
+## Build from source
 
 ```sh
-git clone https://github.com/deepseek-ai/deepseek-harness.git
-cd deepseek-harness
+git clone https://github.com/091022yyj/deepseek-harness-desktop.git
+cd deepseek-harness-desktop
 pnpm install
-pnpm run build
-pnpm dsh web
+pnpm run build:lib
+pnpm run build:web
+bash apps/desktop/build-deb.sh
 ```
 
-## Community and support
-
-- Feel free to submit feedback or bug reports through [GitHub Discussions](https://github.com/deepseek-ai/deepseek-harness/discussions).
-- Add the [`dsh-plugin`](https://github.com/topics/dsh-plugin) topic to your plugin repository for discoverability.
-- Join <a href="https://discord.gg/Ycq5dCaS4">DeepSeek Harness Discord community</a>.
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Development
-
-Start with the [development guide](docs/development.md) and [architecture documentation](docs/architecture.md).
-
-For agents, follow [AGENTS.md](AGENTS.md).
+Build artifacts are written to the `dist/` directory.
 
 ## License
 

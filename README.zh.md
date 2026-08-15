@@ -1,71 +1,65 @@
-# DeepSeek Harness
+# DeepSeek Harness 桌面端
 
-[English](README.md) | 中文
+[中文](README.zh.md) | [English](README.md)
 
-DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的开源 agent harness（智能体框架）。
+DeepSeek Harness 桌面端（`dsh-desktop`）把 DeepSeek Harness 的 Web 界面打包成 Linux 桌面应用：启动后自动在本地拉起服务，并以独立的应用窗口打开，使用体验接近原生桌面程序。
 
-它采用**一切皆插件**的架构，并由 [Cordis](https://github.com/cordiverse/cordis) 驱动，其设计参见论文 [_A Programming Paradigm for Spatiotemporal Composability_](https://github.com/cordiverse/paper)。
+## 特性
 
-## 开发者预览
+- **一键启动**：自动启动本地服务（默认 `http://127.0.0.1:3080`），并打开 Chromium/Chrome 应用窗口
+- **独立窗口**：以 `--app` 模式运行，无标签栏与地址栏，界面干净
+- **独立配置**：使用专属的 Chromium 配置目录，与日常浏览器互不干扰
+- **开箱即用**：安装后可从系统应用菜单或终端启动
+- **可定制**：支持通过环境变量配置端口、浏览器与外部服务地址
 
-DeepSeek Harness 目前处于 _开发者预览_ 阶段，正在快速迭代。**未来将出现破坏兼容性的变更。**
+## 系统要求
 
-## 运行
+- Debian / Ubuntu 等基于 dpkg 的 Linux 发行版（amd64）
+- Node.js >= 22
+- Google Chrome / Chromium 等 Chromium 系浏览器（可选，缺省时回退到 `xdg-open`）
 
-### 通过 `npm` 运行
+## 安装
 
-安装 `Node.js`，然后运行：
+前往 [Releases](../../releases/latest) 页面下载最新版 `deepseek-harness_*.deb` 安装包，然后执行：
 
 ```sh
-npx @deepseek-ai/dsh web
+sudo dpkg -i deepseek-harness_0.1.0~rc.5_amd64.deb
 ```
 
-该命令会启动 Web UI，默认地址为 `http://127.0.0.1:3080`。详见 [Web UI 指南](docs/user/guide/index.md)。
+安装完成后：
 
-### 从源码运行
+- **应用菜单**：在系统应用菜单中找到「DeepSeek Harness 桌面端」并点击
+- **命令行**：运行 `dsh-desktop`
 
-如需从仓库源码运行：
+## 使用
+
+启动后，桌面端会自动拉起本地服务并打开应用窗口。服务地址默认为 `http://127.0.0.1:3080`，也可以直接在浏览器中访问该地址使用 Web 界面。
+
+支持以下环境变量：
+
+| 变量 | 默认值 | 说明 |
+| --- | --- | --- |
+| `DSH_DESKTOP_PORT` | `3080` | 本地服务端口 |
+| `DSH_DESKTOP_URL` | `http://127.0.0.1:3080` | 直接连接已存在的服务地址，不再本地启动 |
+| `DSH_DESKTOP_BROWSER` | 自动检测 | 指定浏览器，如 `google-chrome`、`chromium` |
+
+日志文件：
+
+- 服务日志：`$XDG_RUNTIME_DIR/dsh-desktop.log`（回退 `/tmp/dsh-desktop.log`）
+- 浏览器日志：`$XDG_RUNTIME_DIR/dsh-desktop-browser.log`（回退 `/tmp/dsh-desktop-browser.log`）
+
+## 从源码构建
 
 ```sh
-git clone https://github.com/deepseek-ai/deepseek-harness.git
-cd deepseek-harness
+git clone https://github.com/091022yyj/deepseek-harness-desktop.git
+cd deepseek-harness-desktop
 pnpm install
-pnpm run build
-pnpm dsh web
+pnpm run build:lib
+pnpm run build:web
+bash apps/desktop/build-deb.sh
 ```
 
-## 社区与支持
-
-- 欢迎通过 [GitHub Discussions](https://github.com/deepseek-ai/deepseek-harness/discussions) 提交反馈或 bug 报告。
-- 为你的插件仓库添加 [`dsh-plugin`](https://github.com/topics/dsh-plugin) 话题，便于被发现。
-- 欢迎加入 DeepSeek Harness 企微群：扫码添加企微小助手并填写入群问卷，完成后小助手会邀请你入群。
-
-<table>
-  <thead>
-    <tr>
-      <th align="center">企微小助手</th>
-      <th align="center">入群问卷</th>
-      <th align="center">微信公众号</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td align="center"><img src="assets/community-wecom-assistant.png" alt="DeepSeek Harness 企微小助手二维码" width="180" height="180"></td>
-      <td align="center"><a href="https://trtgsjkv6r.feishu.cn/share/base/form/shrcnIt5twSVdLGD52KJBckGCgg"><img src="assets/community-wecom-survey.png" alt="DeepSeek Harness 入群问卷二维码" width="180" height="180"></a></td>
-      <td align="center"><img src="assets/community-wechat-official-account.png" alt="DeepSeek Harness 团队微信公众号二维码" width="180" height="180"></td>
-    </tr>
-  </tbody>
-</table>
-
-## 参与贡献
-
-参见 [CONTRIBUTING.md](CONTRIBUTING.md)。
-
-## 开发
-
-请先阅读[开发指南](docs/development.md)与[架构文档](docs/architecture.md)。
-
-面向 agent：请遵循 [AGENTS.md](AGENTS.md)。
+打包产物输出到 `dist/` 目录。
 
 ## 许可证
 
