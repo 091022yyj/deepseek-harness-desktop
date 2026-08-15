@@ -26,15 +26,21 @@ DeepSeek Harness 是一个开源的 agent harness（智能体框架），采用*
 
 ## 系统要求
 
-- Debian / Ubuntu 等基于 dpkg 的 Linux 发行版（amd64）
-- Node.js >= 22
-- Google Chrome / Chromium 等 Chromium 系浏览器（可选，缺省时回退到 `xdg-open`）
+所有安装包均**内置 Node.js 运行时**，无需自行安装。仅需一个 Chromium 系浏览器（可选，缺省时回退到系统默认浏览器）。
 
 ## 安装
 
-### 安装包（推荐）
+前往 [Releases](../../releases/latest) 页面下载对应平台的安装包。
 
-前往 [Releases](../../releases/latest) 页面下载最新版 `deepseek-harness_*.deb` 安装包，然后执行：
+### Windows
+
+下载 `deepseek-harness_*_windows-setup.exe`，双击运行安装。安装完成后可从桌面快捷方式或开始菜单启动「DeepSeek Harness 桌面端」。
+
+### macOS
+
+下载 `deepseek-harness_*_macos-arm64.zip`（Apple 芯片）或 `deepseek-harness_*_macos-x64.zip`（Intel 芯片），解压后双击 `dsh-desktop.command` 启动。若系统提示安全警告，请在「系统设置 → 隐私与安全性」中允许打开。
+
+### Linux（Debian / Ubuntu）
 
 ```sh
 sudo dpkg -i deepseek-harness_0.1.0~rc.5_amd64.deb
@@ -103,7 +109,14 @@ cd deepseek-harness-desktop
 pnpm install
 pnpm run build:lib
 pnpm run build:web
-bash apps/desktop/build-deb.sh
+```
+
+构建各平台安装包（首次会从 nodejs.org 下载对应平台的 Node.js 运行时，缓存在 `~/.cache/dsh-build/`）：
+
+```sh
+bash apps/desktop/build-deb.sh      # Linux deb
+bash apps/desktop/build-windows.sh  # Windows 安装器（需要 makensis）
+bash apps/desktop/build-macos.sh    # macOS zip（x64 + arm64）
 ```
 
 打包产物输出到 `dist/` 目录。

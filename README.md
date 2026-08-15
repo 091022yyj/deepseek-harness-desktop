@@ -26,15 +26,21 @@ DeepSeek Harness is an open-source agent harness with an **everything-is-a-plugi
 
 ## Requirements
 
-- Debian / Ubuntu or other dpkg-based Linux distributions (amd64)
-- Node.js >= 22
-- Google Chrome / Chromium or another Chromium-based browser (optional; falls back to `xdg-open`)
+All installers **bundle their own Node.js runtime** — nothing else to install. Only a Chromium-based browser is optional (falls back to the system default browser).
 
 ## Installation
 
-### Package (recommended)
+Download the package for your platform from the [Releases](../../releases/latest) page.
 
-Download the latest `deepseek-harness_*.deb` package from the [Releases](../../releases/latest) page, then run:
+### Windows
+
+Download `deepseek-harness_*_windows-setup.exe`, double-click to install. Launch "DeepSeek Harness Desktop" from the desktop shortcut or the Start menu.
+
+### macOS
+
+Download `deepseek-harness_*_macos-arm64.zip` (Apple Silicon) or `deepseek-harness_*_macos-x64.zip` (Intel), unzip, and double-click `dsh-desktop.command`. If macOS shows a security warning, allow it in **System Settings → Privacy & Security**.
+
+### Linux (Debian / Ubuntu)
 
 ```sh
 sudo dpkg -i deepseek-harness_0.1.0~rc.5_amd64.deb
@@ -103,7 +109,14 @@ cd deepseek-harness-desktop
 pnpm install
 pnpm run build:lib
 pnpm run build:web
-bash apps/desktop/build-deb.sh
+```
+
+Build the installers for each platform (the matching Node.js runtime is downloaded from nodejs.org on first run and cached in `~/.cache/dsh-build/`):
+
+```sh
+bash apps/desktop/build-deb.sh      # Linux deb
+bash apps/desktop/build-windows.sh  # Windows installer (requires makensis)
+bash apps/desktop/build-macos.sh    # macOS zip (x64 + arm64)
 ```
 
 Build artifacts are written to the `dist/` directory.
