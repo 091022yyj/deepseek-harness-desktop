@@ -14,6 +14,7 @@ DeepSeek Harness is an open-source agent harness with an **everything-is-a-plugi
 - **Standalone window**: runs in `--app` mode with no tabs or address bar
 - **Isolated profile**: uses a dedicated Chromium profile directory, separate from your daily browser
 - **Works out of the box**: launch from the system app menu or the terminal after installation
+- **Bundled runtime**: ships its own Node.js, no dependencies to install
 - **Configurable**: customize port, browser, and external service address via environment variables
 
 ### Software features
