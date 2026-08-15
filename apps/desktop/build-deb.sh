@@ -13,9 +13,23 @@ WORK_DIR="$(mktemp -d /tmp/dsh-deb.XXXXXX)"
 DEPLOY_DIR="$WORK_DIR/deploy"
 ROOT_DIR="$WORK_DIR/root"
 INSTALL_DIR="/opt/deepseek-harness"
+NODE_VERSION="v22.23.2"
+NODE_DIST_CACHE="${NODE_DIST_CACHE:-$HOME/.cache/dsh-build/node-dist}"
 
 cleanup() { rm -rf "$WORK_DIR"; }
 trap cleanup EXIT
+
+ensure_node() {
+  local dir="$NODE_DIST_CACHE/node-$NODE_VERSION-linux-x64"
+  if [ ! -x "$dir/bin/node" ]; then
+    mkdir -p "$NODE_DIST_CACHE"
+    echo "==> 下载 Node.js $NODE_VERSION (linux-x64)" >&2
+    curl -fsSL -o "$NODE_DIST_CACHE/node.tar.xz" "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.xz"
+    tar xf "$NODE_DIST_CACHE/node.tar.xz" -C "$NODE_DIST_CACHE"
+    rm -f "$NODE_DIST_CACHE/node.tar.xz"
+  fi
+  echo "$dir"
+}
 
 if [ "${1:-}" != "--skip-build" ]; then
   echo "==> 构建 lib 与 web"
@@ -36,12 +50,26 @@ mkdir -p "$ROOT_DIR$INSTALL_DIR" "$ROOT_DIR/DEBIAN" "$OUT_DIR"
 cp -a "$DEPLOY_DIR/." "$ROOT_DIR$INSTALL_DIR/"
 
 mkdir -p "$ROOT_DIR$INSTALL_DIR/bin"
-cat > "$ROOT_DIR$INSTALL_DIR/bin/dsh" <<EOF
+cat > "$ROOT_DIR$INSTALL_DIR/bin/dsh" <<'EOF'
 #!/bin/sh
-SCRIPT_DIR="\$(CDPATH= cd -- "\$(dirname -- "\$0")" && pwd)"
-exec /usr/bin/node "\$SCRIPT_DIR/../lib/bin.js" "\$@"
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+if [ -x "$SCRIPT_DIR/../node/bin/node" ]; then
+  NODE_BIN="$SCRIPT_DIR/../node/bin/node"
+else
+  NODE_BIN="$(command -v node 2>/dev/null || true)"
+  if [ -z "$NODE_BIN" ]; then
+    echo "未找到 Node.js，请安装 Node.js 22+ 或重新安装本程序。" >&2
+    exit 1
+  fi
+fi
+exec "$NODE_BIN" "$SCRIPT_DIR/../lib/bin.js" "$@"
 EOF
 chmod 755 "$ROOT_DIR$INSTALL_DIR/bin/dsh"
+
+NODE_DIR="$(ensure_node)"
+mkdir -p "$ROOT_DIR$INSTALL_DIR/node/bin"
+cp "$NODE_DIR/bin/node" "$ROOT_DIR$INSTALL_DIR/node/bin/node"
+chmod 755 "$ROOT_DIR$INSTALL_DIR/node/bin/node"
 
 cp apps/desktop/dsh-desktop-packaged.sh "$ROOT_DIR$INSTALL_DIR/bin/dsh-desktop"
 chmod 755 "$ROOT_DIR$INSTALL_DIR/bin/dsh-desktop"
@@ -77,13 +105,13 @@ Priority: optional
 Architecture: $ARCH
 Installed-Size: $INSTALLED_SIZE
 Maintainer: DeepSeek Harness Desktop <dsh-desktop@localhost>
-Depends: nodejs (>= 22.0.0)
 Recommends: xdg-utils, curl
 Suggests: chromium-browser | google-chrome-stable
 Description: DeepSeek Harness desktop client (Web UI in a Chromium app window)
  DeepSeek Harness (dsh) is an open-source agent harness.
- This package installs the dsh CLI and a desktop launcher that serves the
- Web UI on 127.0.0.1 and opens it in a Chromium/Chrome --app window.
+ This package bundles its own Node.js runtime and installs the dsh CLI and a
+ desktop launcher that serves the Web UI on 127.0.0.1 and opens it in a
+ Chromium/Chrome --app window.
 EOF
 
 DEB_FILE="$OUT_DIR/${PKG_NAME}_${DEB_VERSION}_${ARCH}.deb"

@@ -10,6 +10,17 @@ BROWSER_LOG_FILE="${XDG_RUNTIME_DIR:-/tmp}/dsh-desktop-browser.log"
 PROFILE_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/dsh-desktop/chromium-profile"
 START_URL="${DSH_DESKTOP_URL:-$DEFAULT_URL}"
 
+NODE_BIN=""
+find_node() {
+  if [ -x "$INSTALL_DIR/node/bin/node" ]; then
+    NODE_BIN="$INSTALL_DIR/node/bin/node"
+  elif command -v node >/dev/null 2>&1; then
+    NODE_BIN="$(command -v node)"
+  else
+    return 1
+  fi
+}
+
 info()  { printf '\033[1;36m[dsh-desktop]\033[0m %s\n' "$*"; }
 warn()  { printf '\033[1;33m[dsh-desktop]\033[0m %s\n' "$*" >&2; }
 notify_error() {
