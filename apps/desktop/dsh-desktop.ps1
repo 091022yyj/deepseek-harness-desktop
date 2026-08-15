@@ -41,10 +41,8 @@ if ($env:DSH_DESKTOP_URL) {
     $PsInfo.FileName = $NodeExe
     $PsInfo.Arguments = "`"$BinJs`" web --port $Port"
     $PsInfo.WindowStyle = 'Hidden'
-    $PsInfo.UseShellExecute = $false
-    $PsInfo.RedirectStandardOutput = $true
-    $PsInfo.RedirectStandardError = $true
-    $Proc = [System.Diagnostics.Process]::Start($PsInfo)
+    $PsInfo.UseShellExecute = $true
+    [System.Diagnostics.Process]::Start($PsInfo) | Out-Null
     Start-Sleep -Seconds 1
 
     $ready = $false

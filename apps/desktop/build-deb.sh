@@ -76,6 +76,10 @@ chmod 755 "$ROOT_DIR$INSTALL_DIR/bin/dsh-desktop"
 mkdir -p "$ROOT_DIR$INSTALL_DIR/assets"
 cp apps/desktop/assets/icon.png "$ROOT_DIR$INSTALL_DIR/assets/icon.png"
 
+mkdir -p "$ROOT_DIR/usr/bin"
+ln -s "$INSTALL_DIR/bin/dsh" "$ROOT_DIR/usr/bin/dsh"
+ln -s "$INSTALL_DIR/bin/dsh-desktop" "$ROOT_DIR/usr/bin/dsh-desktop"
+
 mkdir -p "$ROOT_DIR/usr/share/applications" "$ROOT_DIR/usr/share/icons/hicolor/256x256/apps"
 cat > "$ROOT_DIR/usr/share/applications/deepseek-harness.desktop" <<EOF
 [Desktop Entry]

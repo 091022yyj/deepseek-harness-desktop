@@ -44,7 +44,7 @@ DeepSeek Harness 是一个开源的 agent harness（智能体框架），采用*
 ### Linux（Debian / Ubuntu）
 
 ```sh
-sudo dpkg -i deepseek-harness_0.1.0~rc.5_amd64.deb
+sudo dpkg -i deepseek-harness_*_amd64.deb
 ```
 
 安装完成后：
